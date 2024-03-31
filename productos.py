@@ -87,9 +87,10 @@ class Client:
         pass
 
 class Node:
-    def __init__(self, data, next_node=None):
+    def __init__(self, data=None):
         self.data = data
-        self.next_node = next_node
+        self.next = None  # Pointer to the next node in the linked list
+
 
 class Cart:
     def __init__(self):
@@ -286,7 +287,7 @@ def checkout():
                 
 # Función principal del cliente
 def client_main():
-    client_cart = Cart()  # Instanciar un carrito para el cliente
+    client_cart = Cart()  # Instantiate a cart for the client
 
     while True:
         show_main_menu()
@@ -296,9 +297,8 @@ def client_main():
             show_categories()
             selected_category = select_category()
             if selected_category:
-            # Aquí iría la lógica para agregar productos al carrito
-                pass
-        
+                add_products_to_cart(selected_category, client_cart)
+
         elif choice == "2":
             show_cart_menu()
             cart_choice = input("Enter your choice: ")
@@ -310,7 +310,7 @@ def client_main():
                 clear_cart(client_cart)
 
         elif choice == "3":
-            checkout()
+            checkout(client_cart)
 
         elif choice == "4":
             print("Thank you for visiting!")
@@ -318,6 +318,26 @@ def client_main():
 
         else:
             print("Invalid choice. Please try again.")
+
+def add_products_to_cart(selected_category, client_cart):
+    print(f"\nYou selected {selected_category.category_name}.")
+    print("Here are the products in this category:")
+    selected_category.products.print_list()  # Assuming you have a method to print products in the category
+    while True:
+        product_id = input("Enter the ID of the product you want to add (or 'done' to finish): ")
+        if product_id.lower() == 'done':
+            break
+        else:
+            product = selected_category.products.get_product_by_id(product_id)
+            if product:
+                quantity = int(input(f"How many '{product.name}' do you want to add? "))
+                client_cart.add_product(product, quantity)
+                print(f"{quantity} '{product.name}' added to your cart.")
+            else:
+                print("Invalid product ID. Please try again.")
+
+# Implement other functions: view_cart, remove_item_from_cart, clear_cart, and checkout as needed
+
 
 # Llamada a la función principal del cliente
 if __name__ == "__main__":
