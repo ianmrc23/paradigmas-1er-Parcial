@@ -16,7 +16,7 @@ class LinkedList:
         new_node.next = self.head
         self.head = new_node
         self.size += 1  # Incrementar el tamaño de la lista
-
+# narakokoooo
     def add_to_end(self, data):
         new_node = Node(data)
         if self.is_empty():
@@ -170,17 +170,17 @@ if __name__ == "__main__":
     client.client_password = "password123"
 
 # Función para mostrar el menú principal
-def show_main_menu():
-    print("\n╔════════════════════════════════════╗")
-    print("║        Welcome to the store!       ║")
-    print("║                                    ║")
-    print("║            Main Menu:              ║")
-    print("║   1. Show categories               ║")
-    print("║   2. Cart menu                     ║")
-    print("║   3. Checkout                      ║")
-    print("║   4. Exit without buying           ║")
-    print("║                                    ║")
-    print("╚════════════════════════════════════╝")
+# def show_main_menu():
+#     print("\n╔════════════════════════════════════╗")
+#     print("║        Welcome to the store!       ║")
+#     print("║                                    ║")
+#     print("║            Main Menu:              ║")
+#     print("║   1. Show categories               ║")
+#     print("║   2. Cart menu                     ║")
+#     print("║   3. Checkout                      ║")
+#     print("║   4. Exit without buying           ║")
+#     print("║                                    ║")
+#     print("╚════════════════════════════════════╝")
 
 
 # Función para mostrar las categorías disponibles
