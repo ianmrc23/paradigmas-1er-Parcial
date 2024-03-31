@@ -1,0 +1,50 @@
+1 Fruits Apple Red delicious apple 1.99
+1 Fruits Banana Fresh banana 0.59
+1 Fruits Orange Juicy orange 0.79
+1 Fruits Grape Sweet grape 2.49
+1 Fruits Mango Ripe mango 1.99
+1 Fruits Pineapple Fresh pineapple 2.99
+1 Fruits Strawberry Juicy strawberry 3.49
+1 Fruits Kiwi Green kiwi 1.29
+1 Fruits Pear Juicy pear 1.79
+1 Fruits Watermelon Sweet watermelon 4.99
+2 Vegetables Carrot Fresh carrot 0.99
+2 Vegetables Lettuce Crispy lettuce 1.49
+2 Vegetables Tomato Ripe tomato 0.79
+2 Vegetables Potato Starchy potato 0.89
+2 Vegetables Onion Aromatic onion 0.69
+2 Vegetables Cucumber Fresh cucumber 1.29
+2 Vegetables Broccoli Nutritious broccoli 1.99
+2 Vegetables BellPepper Crunchy bell pepper 1.39
+2 Vegetables Spinach Healthy spinach 1.59
+2 Vegetables Garlic Flavorful garlic 0.49
+3 Dairy Milk Fresh milk 2.99
+3 Dairy Cheese Creamy cheese 3.49
+3 Dairy Yogurt Delicious yogurt 1.99
+3 Dairy Butter Rich butter 2.29
+3 Dairy Cream Whipped cream 1.79
+3 Dairy IceCream Creamy ice cream 4.99
+3 Dairy CottageCheese Smooth cottage cheese 2.49
+3 Dairy SourCream Tangy sour cream 1.69
+3 Dairy CreamCheese Creamy cream cheese 2.99
+3 Dairy EvaporatedMilk Nutritious evaporated milk 1.89
+4 Bakery Bread Fresh bread 1.29
+4 Bakery Cake Delicious cake 19.99
+4 Bakery Cookies Crunchy cookies 2.49
+4 Bakery Croissant Buttery croissant 1.79
+4 Bakery Muffin Moist muffin 1.49
+4 Bakery Pastry Flaky pastry 2.29
+4 Bakery Donut Sweet donut 0.99
+4 Bakery Baguette Crusty baguette 1.99
+4 Bakery Scone Tasty scone 1.29
+4 Bakery Brownie Fudgy brownie 2.99
+5 Beverages Water Pure water 0.79
+5 Beverages Coffee Aromatic coffee 2.49
+5 Beverages Tea Refreshing tea 1.99
+5 Beverages Soda Fizzy soda 1.29
+5 Beverages Juice Fresh juice 3.49
+5 Beverages EnergyDrink Energizing energy drink 2.99
+5 Beverages Smoothie Healthy smoothie 4.29
+5 Beverages Beer Refreshing beer 5.99
+5 Beverages Wine Fine wine 12.99
+5 Beverages Cocktail Tasty cocktail 7.49
