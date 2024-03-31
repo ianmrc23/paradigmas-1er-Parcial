@@ -16,7 +16,7 @@ class LinkedList:
         new_node.next = self.head
         self.head = new_node
         self.size += 1  # Incrementar el tamaño de la lista
-# narakokoooo
+
     def add_to_end(self, data):
         new_node = Node(data)
         if self.is_empty():
@@ -86,18 +86,59 @@ class Client:
     def pay(self):
         pass
 
-class Cart(LinkedList):
+class Node:
+    def __init__(self, data, next_node=None):
+        self.data = data
+        self.next_node = next_node
+
+class Cart:
     def __init__(self):
-        super().__init__()
+        self.head = None  # Head of the linked list
 
-    def add_to_cart(self, data):
-        self.add_to_end(data)
+    def add_product(self, product, quantity):
+        new_node = Node({"product": product, "quantity": quantity})  # Create a new node
+        if not self.head:
+            self.head = new_node  # If the list is empty, set the new node as the head
+        else:
+            current = self.head
+            while current.next_node:
+                current = current.next_node
+            current.next_node = new_node  # Append the new node to the end of the list
 
-    def remove_from_cart(self, data):
-        self.remove(data)
+    def remove_product(self, product):
+        current = self.head
+        prev = None
+        while current:
+            if current.data["product"] == product:
+                if prev:
+                    prev.next_node = current.next_node
+                else:
+                    self.head = current.next_node
+                return  # Exit the function after removing the product
+            prev = current
+            current = current.next_node
+        print("Product not found in cart.")
 
     def view_cart(self):
-        self.print_list()
+        if not self.head:
+            print("Your cart is empty.")
+            return
+
+        total_price = 0
+        current = self.head
+        print("\n╔══════════════════════════════════════════════════╗")
+        print("║                   Your Cart                       ║")
+        print("╠══════════════════════════════════════════════════╣")
+        while current:
+            product = current.data["product"]
+            quantity = current.data["quantity"]
+            print(f"║ {product.name.ljust(40)} | Quantity: {quantity} | Price: ${product.price * quantity:.2f} ║")
+            total_price += product.price * quantity
+            current = current.next_node
+        print("╠══════════════════════════════════════════════════╣")
+        print(f"║           Total Price: ${total_price:.2f}          ║")
+        print("╚══════════════════════════════════════════════════╝")
+
 
 class Order(Client):
     def __init__(self):
@@ -145,22 +186,22 @@ if __name__ == "__main__":
     employee.employee_role = "Clerk"
 
     # Leer el archivo de inventario
-    with open("inventory.txt", "r") as file:
-        for line in file:
-            data = line.strip().split()
-            category_id = int(data[0])
-            category_name = data[1]
-            product_name = data[2]
-            product_description = " ".join(data[3:-1])
-            product_price = float(data[-1])
-            
-            current_category = employee.find_category(category_name)
-            if not current_category:
-                current_category = Category(category_id, category_name)
-                employee.add_category(current_category)
-            
-            product_info = f"{product_name}: {product_description}, ${product_price:.2f}"  # Concatenar nombre, descripción y precio
-            current_category.products.add_to_end(product_info)
+with open("inventory.txt", "r") as file:
+    for line in file:
+        data = line.strip().split()
+        category_id = int(data[0])
+        category_name = data[1]
+        product_name = data[2]
+        product_description = " ".join(data[3:-1])
+        product_price = float(data[-1])
+        
+        current_category = employee.find_category(category_id)  # Find category by ID
+        if not current_category:
+            current_category = Category(category_id, category_name)
+            employee.add_category(current_category)
+        
+        product_info = f"{product_name}: {product_description}, ${product_price:.2f}"  # Concatenar nombre, descripción y precio
+        current_category.products.add_to_end(product_info)
 
     # Crear un cliente
     client = Client()
@@ -170,30 +211,34 @@ if __name__ == "__main__":
     client.client_password = "password123"
 
 # Función para mostrar el menú principal
-# def show_main_menu():
-#     print("\n╔════════════════════════════════════╗")
-#     print("║        Welcome to the store!       ║")
-#     print("║                                    ║")
-#     print("║            Main Menu:              ║")
-#     print("║   1. Show categories               ║")
-#     print("║   2. Cart menu                     ║")
-#     print("║   3. Checkout                      ║")
-#     print("║   4. Exit without buying           ║")
-#     print("║                                    ║")
-#     print("╚════════════════════════════════════╝")
+def show_main_menu():
+    print("\n╔════════════════════════════════════╗")
+    print("║        Welcome to the store!       ║")
+    print("║                                    ║")
+    print("║            Main Menu:              ║")
+    print("║   1. Show categories               ║")
+    print("║   2. Cart menu                     ║")
+    print("║   3. Checkout                      ║")
+    print("║   4. Exit without buying           ║")
+    print("║                                    ║")
+    print("╚════════════════════════════════════╝")
 
 
 # Función para mostrar las categorías disponibles
 # falta arreglar porque milena no hizo nada, solo puso el texto aesthetic
 def show_categories():
+    printed_categories = set()  # Set to keep track of printed categories
     print("\n╔══════════════════════════════════════════════════╗")
     print("║             Available Categories                 ║")
     print("╠══════════════════════════════════════════════════╣")
     current_category = employee.categories.head
     while current_category:
-        print(f"║ {current_category.data.category_id}. {current_category.data.category_name.ljust(40)}      ║")
+        if current_category.data.category_name not in printed_categories:
+            print(f"║ {current_category.data.category_id}. {current_category.data.category_name.ljust(40)}      ║")
+            printed_categories.add(current_category.data.category_name)  # Add printed category to the set
         current_category = current_category.next
     print("╚══════════════════════════════════════════════════╝")
+
 
 # Función para seleccionar una categoría y ver sus productos
 def select_category():
@@ -237,7 +282,8 @@ def clear_cart(cart):
 def checkout():
     print("\nCheckout options:")
     # Opciones de pago aquí
-
+                    
+                
 # Función principal del cliente
 def client_main():
     client_cart = Cart()  # Instanciar un carrito para el cliente
@@ -250,9 +296,9 @@ def client_main():
             show_categories()
             selected_category = select_category()
             if selected_category:
-                # Aquí iría la lógica para agregar productos al carrito
+            # Aquí iría la lógica para agregar productos al carrito
                 pass
-
+        
         elif choice == "2":
             show_cart_menu()
             cart_choice = input("Enter your choice: ")
