@@ -212,17 +212,17 @@ with open("inventory.txt", "r") as file:
     client.client_password = "password123"
 
 # Función para mostrar el menú principal
-def show_main_menu():
-    print("\n╔════════════════════════════════════╗")
-    print("║        Welcome to the store!       ║")
-    print("║                                    ║")
-    print("║            Main Menu:              ║")
-    print("║   1. Show categories               ║")
-    print("║   2. Cart menu                     ║")
-    print("║   3. Checkout                      ║")
-    print("║   4. Exit without buying           ║")
-    print("║                                    ║")
-    print("╚════════════════════════════════════╝")
+# def show_main_menu():
+#     print("\n╔════════════════════════════════════╗")
+#     print("║        Welcome to the store!       ║")
+#     print("║                                    ║")
+#     print("║            Main Menu:              ║")
+#     print("║   1. Show categories               ║")
+#     print("║   2. Cart menu                     ║")
+#     print("║   3. Checkout                      ║")
+#     print("║   4. Exit without buying           ║")
+#     print("║                                    ║")
+#     print("╚════════════════════════════════════╝")
 
 
 # Función para mostrar las categorías disponibles
