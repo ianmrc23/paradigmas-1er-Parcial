@@ -1,3 +1,5 @@
+import os
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -230,6 +232,7 @@ def employee_main():
     return categories
     
 def client_main():
+    clear_screen()
     # Crear un cliente
     client = Client()
     client_cart = Cart()
@@ -243,10 +246,13 @@ def client_main():
     categories = employee_main()
     
     while True:
+        clear_screen()
         show_main_menu()
-        choice = input("Enter your choice: ")
+        
+        choice = input("\n* Enter your choice: ")
         
         if choice == "1":
+            clear_screen()
             # Show categories
             show_categories(categories)
             access_category(categories, client_cart)
@@ -268,26 +274,20 @@ def client_main():
             print("Invalid choice. Please enter a valid option.")
 
 def show_main_menu():
+    print(("\n               Welcome to the store!\n\n").upper())
     print("\n╔══════════════════════════════════════════════════╗")
-    print("║                                                  ║")
-    print("║              Welcome to the store!               ║")
-    print("║                                                  ║")
-    print("║                  Main Menu:                      ║")
-    print("║                                                  ║")
-    print("║         1. Show categories                       ║")
-    print("║                                                  ║")
-    print("║         2. Cart menu                             ║")
-    print("║                                                  ║")
-    print("║         3. Checkout                              ║")
-    print("║                                                  ║")
-    print("║         4. Exit without buying                   ║")
-    print("║                                                  ║")
+    print("║                    MAIN MENU:                    ║")
+    print("╠══════════════════════════════════════════════════╣")
+    print("║1. Show categories                                ║")
+    print("║2. Cart menu                                      ║")
+    print("║3. Checkout                                       ║")
+    print("║4. Exit without buying                            ║")
     print("╚══════════════════════════════════════════════════╝")
 
 def show_categories(categories):
     printed_categories = set()  # Set to keep track of printed categories
     print("\n╔══════════════════════════════════════════════════╗")
-    print("║             Available Categories                 ║")
+    print("║             AVAILABLE CATEGORIES                 ║")
     print("╠══════════════════════════════════════════════════╣")
     current_category = categories.head
     while current_category:
@@ -299,7 +299,7 @@ def show_categories(categories):
     
 def access_category(categories, client_cart):
     while True:
-        category_choice = input("Enter the category number you want to access (or 0 to go back to the main menu): ")
+        category_choice = input("\n* Enter the category number you want to access (or 0 to go back to the main menu): ")
         
         if category_choice == "0":
             return
@@ -327,8 +327,9 @@ def find_category_by_id(categories, category_id):
     return None
 
 def show_products_in_category(category, client_cart):
+    clear_screen()
     print("╔══════════════════════════════════════════════════╗")
-    print(f"║ {(f"Products in {category.category_name}").center(48)} ║")
+    print(f"║ {((f"{category.category_name}").upper()).center(48)} ║")
     print("╠════╦════════════════════════╦════════════╦═══════╣")
     print("║ ID ║ Product Name".ljust(30) + "║ Stock".ljust(13) + "║ Price ║")
     print("╠════╬════════════════════════╬════════════╬═══════╣")
@@ -348,7 +349,7 @@ def show_products_in_category(category, client_cart):
     
 def handle_product_selection(category, client_cart):
     while True:
-        choice = input("\nEnter the product number you want to add to cart (or 0 to go back): ")
+        choice = input("\n* Enter the product number you want to add to cart (or 0 to go back): ")
         if choice == "0":
             return
         elif choice.isdigit():
@@ -372,7 +373,7 @@ def add_product_to_cart(category, product_number, client_cart):
     
     if chosen_product:
         while True:
-            quantity = input("Enter the quantity: ")
+            quantity = input("\n* Enter the quantity: ")
             if quantity.isdigit():
                 quantity = int(quantity)
                 if quantity > 0 and quantity <= chosen_product.product_quantity:
@@ -382,11 +383,13 @@ def add_product_to_cart(category, product_number, client_cart):
                     
                     client_cart.modify_quantity(name, quantity)
                     
-                    print(f"{quantity} {name} added to cart.")
+                    print(f"\n* Added {quantity} {name}(s) to cart.")
                     
                     category.modify_product_quantity(name, quantity)
                     
-                    print(f"Se actualizo: {name} {chosen_product.product_quantity} unidades menos")
+                    print(f"\n* Updated: {name} - {quantity} units deducted")
+                    
+                    wait_for_key()
                     
                     break
                 else:
@@ -395,7 +398,7 @@ def add_product_to_cart(category, product_number, client_cart):
                 print("Invalid input. Please enter a number.")
 
 def exit_without_buying():
-    print("You have chosen to exit without buying anything. Goodbye!")
+    print("\n* You have chosen to exit without buying anything. Goodbye!")
     exit()
 
 
@@ -425,8 +428,12 @@ def checkout():
     print("\nCheckout options:")
     # Opciones de pago aquí
                     
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-
+def wait_for_key():
+    input("\n* Press Enter to continue...")
+    
 if __name__ == "__main__":
     #employee_main()
     client_main()
