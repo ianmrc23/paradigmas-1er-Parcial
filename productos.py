@@ -59,7 +59,12 @@ class Category:
         current_product = self.products.head
         while current_product:
             if current_product.data.product_name == product_name:
+                print(f"\n\n* Additional Information About Product Stock in Inventory")
+                print(f"\n* Modifying quantity of {product_name}:")
+                print(f"\n* Current quantity: {current_product.data.product_quantity}")
+                print(f"\n* Quantity to subtract: {quantity}")
                 current_product.data.product_quantity -= quantity
+                print(f"\n* New quantity: {current_product.data.product_quantity}")
                 break
             current_product = current_product.next_node
 
@@ -80,41 +85,19 @@ class Client:
 
 class Cart:
     def __init__(self):
-        self.head = None  # Head of the linked list
+        self.head = None
 
-    def add_product(self, product):
-        new_node = Node(product)  # Create a new node
+    def add_product(self, product, quantity):
+        product_copy = Product(product.product_id, product.product_name, product.product_price, quantity)
+        new_node = Node(product_copy)
         if not self.head:
-            self.head = new_node  # If the list is empty, set the new node as the head
+            self.head = new_node
         else:
             current = self.head
             while current.next_node:
                 current = current.next_node
-            current.next_node = new_node  # Append the new node to the end of the list
-
-    def modify_quantity(self, product_name, quantity):
-        current = self.head
-        while current:
-            if current.data.product_name == product_name:
-                current.data.product_quantity = quantity
-                break
-            current = current.next_node
+            current.next_node = new_node
             
-    def remove_product(self, product):
-        current = self.head
-        prev = None
-        while current:
-            if current.data["product"] == product:
-                if prev:
-                    prev.next_node = current.next_node
-                else:
-                    self.head = current.next_node
-                return  # Exit the function after removing the product
-            prev = current
-            current = current.next_node
-        print("Product not found in cart.")
-        return  # Added to exit the function if the product is not found
-
     def view_cart(self):
         if not self.head:
             print("Your cart is empty.")
@@ -122,21 +105,98 @@ class Cart:
 
         total_price = 0
         current = self.head
-        print("\n╔══════════════════════════════════════════════════╗")
-        print("║                   Your Cart                       ║")
-        print("╠══════════════════════════════════════════════════╣")
-        print("║ Product Name                | Quantity | Price     ║")
-        print("╠════════════════════════════╦══════════╦═══════════╣")
+        print("\n╔════════════════════════════════════════════════════╗")
+        print("║" + "Your Cart".center(52) + "║")
+        print("╠═════════════════════════════╦══════════╦═══════════╣")
+        print("║ Product Name                ║ Quantity ║ Price     ║")
+        print("╠═════════════════════════════╬══════════╬═══════════╣")
         while current:
             product = current.data
             quantity = product.product_quantity
             price = product.product_price
-            print(f"║ {product.product_name.ljust(27)} │ {str(quantity).ljust(8)} │ ${price * quantity:.2f} ║")
             total_price += price * quantity
+            print(f"║ {product.product_name.ljust(27)} ║ {str(quantity).ljust(8)} ║ ${price * quantity:.2f}{' '.rjust(5)}║")
             current = current.next_node
-        print("╠════════════════════════════╩══════════╩═══════════╣")
-        print(f"║           Total Price: ${total_price:.2f}          ║")
-        print("╚══════════════════════════════════════════════════╝")
+        print("╠═════════════════════════════╩══════════╩═══════════╣")
+        print(f"║ {'Total Price:'.ljust(40)} ${total_price:.2f}{' '.rjust(5)}║")
+        print("╚════════════════════════════════════════════════════╝")
+
+    def clear_cart(self):
+        if not self.head:
+            print("\n* Your cart is already empty.")
+            return
+
+        print("\n* Clearing your cart...")
+        current = self.head
+        while current:
+            product_name = current.data.product_name
+            print(f"\n* Removing {product_name} from your cart.")
+            current = current.next_node
+
+        # Clearing the cart by setting the head to None
+        self.head = None
+        print("\n* Your cart has been successfully cleared.")
+    
+    def remove_product(self):
+        if not self.head:
+            print("Your cart is empty.")
+            return
+
+        current = self.head
+        product_list = []
+        while current:
+            product_list.append(current.data)
+            current = current.next_node
+
+        print("Products in your cart:")
+        for i, product in enumerate(product_list, 1):
+            print(f"{i}. {product.product_name} - Quantity: {product.product_quantity}")
+
+        while True:
+            choice = input("Enter the number of the product you want to remove (or 0 to go back): ")
+            if choice == "0":
+                return
+            elif choice.isdigit():
+                product_index = int(choice) - 1
+                if 0 <= product_index < len(product_list):
+                    break
+                else:
+                    print("Invalid product number. Please enter a valid number.")
+            else:
+                print("Invalid input. Please enter a number.")
+
+        product_to_remove = product_list[product_index]
+        while True:
+            quantity_to_remove = input(f"Enter the quantity to remove for {product_to_remove.product_name}: ")
+            if quantity_to_remove.isdigit():
+                quantity_to_remove = int(quantity_to_remove)
+                if quantity_to_remove >= product_to_remove.product_quantity:
+                    self.remove_entire_product(product_to_remove)
+                    print(f"{product_to_remove.product_name} removed from your cart.")
+                    break
+                elif quantity_to_remove > 0:
+                    product_to_remove.product_quantity -= quantity_to_remove
+                    print(f"{quantity_to_remove} units of {product_to_remove.product_name} removed from your cart.")
+                    break
+                else:
+                    print("Invalid quantity. Please enter a valid quantity.")
+            else:
+                print("Invalid input. Please enter a number.")
+
+        print("Process completed successfully.")
+
+    def remove_entire_product(self, product):
+        current = self.head
+        previous = None
+        while current:
+            if current.data == product:
+                if previous:
+                    previous.next_node = current.next_node
+                else:
+                    self.head = current.next_node
+                return
+            previous = current
+            current = current.next_node
 
 class Order:
     def __init__(self, client, cart):
@@ -147,11 +207,9 @@ class Order:
         self.order_details = None
 
     def place_order(self):
-        # Implementar lógica para realizar el pedido
         pass
 
     def cancel_order(self):
-        # Implementar lógica para cancelar el pedido
         pass
 
 class Employee:
@@ -187,7 +245,7 @@ def read_inventory(file_path):
             product_id = int(data[2])
             product_name = data[3]
             product_price = float(data[-2])
-            product_quantity = float(data[-1])
+            product_quantity = int(data[-1])
             
             current_category = employee.find_category(category_id)
             if not current_category:
@@ -225,10 +283,7 @@ def employee_main():
     
     # modo empleado
     # falta implementar
-    
-    # imprimir inventario de prueba
-    # print_inventory(categories)
-    
+
     return categories
     
 def client_main():
@@ -258,9 +313,9 @@ def client_main():
             access_category(categories, client_cart)
             
         elif choice == "2":
+            clear_screen()
             # Cart menu
-            #show_cart()
-            pass
+            cart_menu(client_cart)
         elif choice == "3":
             # Checkout
             pass
@@ -276,16 +331,16 @@ def client_main():
 def show_main_menu():
     print(("\n               Welcome to the store!\n\n").upper())
     print("\n╔══════════════════════════════════════════════════╗")
-    print("║                    MAIN MENU:                    ║")
+    print("║                    MAIN  MENU                    ║")
     print("╠══════════════════════════════════════════════════╣")
-    print("║1. Show categories                                ║")
-    print("║2. Cart menu                                      ║")
-    print("║3. Checkout                                       ║")
-    print("║4. Exit without buying                            ║")
+    print("║   1. Show categories                             ║")
+    print("║   2. Cart menu                                   ║")
+    print("║   3. Checkout                                    ║")
+    print("║   4. Exit without buying                         ║")
     print("╚══════════════════════════════════════════════════╝")
 
 def show_categories(categories):
-    printed_categories = set()  # Set to keep track of printed categories
+    printed_categories = set()
     print("\n╔══════════════════════════════════════════════════╗")
     print("║             AVAILABLE CATEGORIES                 ║")
     print("╠══════════════════════════════════════════════════╣")
@@ -293,7 +348,7 @@ def show_categories(categories):
     while current_category:
         if current_category.data.category_name not in printed_categories:
             print(f"║ {current_category.data.category_id}. {current_category.data.category_name.ljust(40)}      ║")
-            printed_categories.add(current_category.data.category_name)  # Add printed category to the set
+            printed_categories.add(current_category.data.category_name)
         current_category = current_category.next_node
     print("╚══════════════════════════════════════════════════╝")
     
@@ -362,6 +417,12 @@ def handle_product_selection(category, client_cart):
         else:
             print("Invalid input. Please enter a number.")
 
+def print_product(product):
+    print("Product ID:", product.product_id)
+    print("Product Name:", product.product_name)
+    print("Product Price:", product.product_price)
+    print("Product Quantity:", product.product_quantity)
+
 def add_product_to_cart(category, product_number, client_cart):
     current_product = category.products.head
     chosen_product = None
@@ -379,50 +440,67 @@ def add_product_to_cart(category, product_number, client_cart):
                 if quantity > 0 and quantity <= chosen_product.product_quantity:
                     name = chosen_product.product_name
                     
-                    client_cart.add_product(chosen_product)
-                    
-                    client_cart.modify_quantity(name, quantity)
+                    client_cart.add_product(chosen_product, quantity)
                     
                     print(f"\n* Added {quantity} {name}(s) to cart.")
                     
                     category.modify_product_quantity(name, quantity)
                     
-                    print(f"\n* Updated: {name} - {quantity} units deducted")
-                    
                     wait_for_key()
-                    
                     break
                 else:
                     print("Invalid quantity. Please enter a valid quantity.")
             else:
                 print("Invalid input. Please enter a number.")
 
+def show_cart_menu():
+    print("\n╔══════════════════════════════════════════════════╗")
+    print("║                    CART  MENU                    ║")
+    print("╠══════════════════════════════════════════════════╣")
+    print("║   1. View Cart                                   ║")
+    print("║   2. Remove Item                                 ║")
+    print("║   3. Clear Cart                                  ║")
+    print("╚══════════════════════════════════════════════════╝")
+
 def exit_without_buying():
     print("\n* You have chosen to exit without buying anything. Goodbye!")
     exit()
 
+def cart_menu(client_cart):
+    while True:
+        clear_screen()
+        show_cart_menu()
 
+        choice = input("\n* Enter your choice (or 0 to go back to the main menu): ")
+        if choice == '1':
+            clear_screen()
+            client_cart.view_cart()
+            wait_for_key()
+        elif choice == '2':
+            clear_screen()
+            client_cart.remove_product()
+            wait_for_key()
+        elif choice == '3':
+            clear_screen()
+            client_cart.clear_cart()
+            wait_for_key()
+        elif choice == '0':
+            break
+        else:
+            print("Invalid choice. Please enter a valid option.")
 
-
-
-
-
-def show_cart_menu():
-    print("\n╔════════════════════════════════════════╗")
-    print("║               Cart Menu                 ║")
-    print("╠════════════════════════════════════════╣")
-    print("║   1. View Cart                          ║")
-    print("║   2. Remove Item                        ║")
-    print("║   3. Clear Cart                         ║")
-    print("║   4. Back                               ║")
-    print("╚════════════════════════════════════════╝")
-
-def remove_item_from_cart(cart):
-    item_to_remove = input("Enter the product to remove: ")
-    cart.remove_from_cart(item_to_remove)
-
-def clear_cart(cart):
-    cart.clear()
+def print_category(category):
+    print("\n" + "=" * 50)
+    print(f"Category: {category.category_name}")
+    print("=" * 50)
+    print("\nID  |  Product Name            |  Stock  |  Price")
+    print("-" * 50)
+    current_product = category.products.head
+    while current_product:
+        product = current_product.data
+        print(f"{str(product.product_id).ljust(3)} | {product.product_name.ljust(25)} | {str(product.product_quantity).ljust(7)} | ${str(product.product_price)}")
+        current_product = current_product.next_node
+    print("=" * 50)
 
 def checkout():
     print("\nCheckout options:")
