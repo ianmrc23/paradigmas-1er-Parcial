@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import os
 
 class Node:
@@ -69,11 +70,12 @@ class Category:
             current_product = current_product.next_node
 
 class Product:
-    def __init__(self, product_id, product_name, product_price, product_quantity):
+    def __init__(self, product_id, product_name, product_price, product_quantity, product_weight):
         self.product_id = product_id
         self.product_name = product_name
         self.product_price = product_price
         self.product_quantity = product_quantity
+        self.product_weight = product_weight
 
 class Client:
     def __init__(self):
@@ -82,13 +84,14 @@ class Client:
         self.client_email = None
         self.client_password = None
         self.client_address = None
+        self.cliente_distance_from_store = None
 
 class Cart:
     def __init__(self):
         self.head = None
 
     def add_product(self, product, quantity):
-        product_copy = Product(product.product_id, product.product_name, product.product_price, quantity)
+        product_copy = Product(product.product_id, product.product_name, product.product_price, quantity, product.product_weight)
         new_node = Node(product_copy)
         if not self.head:
             self.head = new_node
@@ -97,28 +100,43 @@ class Cart:
             while current.next_node:
                 current = current.next_node
             current.next_node = new_node
-            
+    
+    def calculate_totals(self):
+        total_price = 0
+        total_weight = 0
+        current = self.head
+        while current:
+            product = current.data
+            quantity = product.product_quantity
+            price = product.product_price
+            weight = product.product_weight
+            total_price += price * quantity
+            total_weight += weight * quantity
+            current = current.next_node
+        return total_price, total_weight
+          
     def view_cart(self):
         if not self.head:
             print("Your cart is empty.")
             return
 
-        total_price = 0
-        current = self.head
+        total_price, total_weight = self.calculate_totals()
+
         print("\n╔════════════════════════════════════════════════════╗")
         print("║" + "Your Cart".center(52) + "║")
         print("╠═════════════════════════════╦══════════╦═══════════╣")
         print("║ Product Name                ║ Quantity ║ Price     ║")
         print("╠═════════════════════════════╬══════════╬═══════════╣")
+        current = self.head
         while current:
             product = current.data
             quantity = product.product_quantity
             price = product.product_price
-            total_price += price * quantity
             print(f"║ {product.product_name.ljust(27)} ║ {str(quantity).ljust(8)} ║ ${price * quantity:.2f}{' '.rjust(5)}║")
             current = current.next_node
         print("╠═════════════════════════════╩══════════╩═══════════╣")
         print(f"║ {'Total Price:'.ljust(40)} ${total_price:.2f}{' '.rjust(5)}║")
+        print(f"║ {'Total Weight:'.ljust(40)} {total_weight}{' '.rjust(5)}║")
         print("╚════════════════════════════════════════════════════╝")
 
     def clear_cart(self):
@@ -244,15 +262,16 @@ def read_inventory(file_path):
             category_name = data[1]
             product_id = int(data[2])
             product_name = data[3]
-            product_price = float(data[-2])
-            product_quantity = int(data[-1])
+            product_price = float(data[-3])  # Índice -3 para el precio
+            product_quantity = int(data[-2])  # Índice -2 para la cantidad
+            product_weight = float(data[-1])  # Índice -1 para el peso
             
             current_category = employee.find_category(category_id)
             if not current_category:
                 current_category = Category(category_id, category_name)
                 employee.add_category(current_category)
             
-            new_product = Product(product_id, product_name, product_price, product_quantity)
+            new_product = Product(product_id, product_name, product_price, product_quantity, product_weight)
             current_category.products.add_to_end(new_product)
     
     return employee.categories
@@ -296,6 +315,7 @@ def client_main():
     client.client_name = "Alice"
     client.client_email = "alice@example.com"
     client.client_password = "password123"
+    client.client_distance_from_store = 5
     
     # exportamos el inventario para uso del cliente
     categories = employee_main()
@@ -317,7 +337,10 @@ def client_main():
             # Cart menu
             cart_menu(client_cart)
         elif choice == "3":
+            clear_screen()
             # Checkout
+            checkout_menu(client, client_cart)
+            
             pass
         
         elif choice == "4":
@@ -502,10 +525,65 @@ def print_category(category):
         current_product = current_product.next_node
     print("=" * 50)
 
-def checkout():
-    print("\nCheckout options:")
-    # Opciones de pago aquí
-                    
+def checkout_menu(client, client_cart):
+    total_amount, total_weight = client_cart.calculate_totals()
+    destination = client.client_distance_from_store
+    
+    print(f"\n* Total product cost: {total_amount}")
+    while True:
+        print("Checkout Menu:")
+        print("1. Pay with Cash")
+        print("2. Pay with Card (30% discount)")
+        print("3. Pay with QR (10% discount)")
+
+        choice = input("\n* Select payment method (or 0 to go back to the main menu): ")
+        if choice == '0':
+            return
+        elif choice == '1':
+            payment_method = CashPayment()
+            break
+        elif choice == '2':
+            payment_method = CardPayment()
+            break
+        elif choice == '3':
+            payment_method = QRPayment()
+            break
+        else:
+            print("Invalid payment method. Please enter a valid option.")
+
+    product_cost = payment_method.process_payment(total_amount)
+    total_with_discount = total_amount - product_cost
+
+    print(f"\n* Total amount with discount: {total_with_discount}")
+        
+    while True:
+        print("Shipping Methods:")
+        print("1. Standard Shipping")
+        print("2. Express Shipping")
+        print("3. In-Store Pickup")
+
+        choice = input("\n* Select shipping method (or 0 to go back to the main menu): ")
+
+        if choice == '0':
+            return
+        elif choice == '1':
+            shipping_method = StandardShipping()
+            break
+        elif choice == '2':
+            shipping_method = ExpressShipping()
+            break
+        elif choice == '3':
+            shipping_method = InStorePickup()
+            break
+        else:
+            print("Invalid shipping method. Please enter a valid option.")
+
+    shipping_cost = calculate_shipping(shipping_method, total_weight, destination)
+    print(f"\n* Shipping cost: {shipping_cost}")
+
+    total_amount_with_shipping = total_with_discount + shipping_cost
+    print(f"\n* Total amount with discount and shipping: {total_amount_with_shipping}")
+
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -516,29 +594,65 @@ if __name__ == "__main__":
     #employee_main()
     client_main()
  
-"""
-1. mostrar categorias
-    se muestran todas las categorias
-    1) acceder a una categoria x
-        se muestran todos los productos
-        1) agregar producto x al carrito, agregar cantidad y del producto
+    """
+    1. mostrar categorias
+        se muestran todas las categorias
+        1) acceder a una categoria x
+            se muestran todos los productos
+            1) agregar producto x al carrito, agregar cantidad y del producto
+            2) retroceder
         2) retroceder
-    2) retroceder
-2. menu carrito
-    1) ver todo el carrito
-       se muestra cada producto con su cantidad y precio unitario y precio total
-        1) retroceder
-    2) eliminar articulo
-        se muestra cada producto con su cantidad 
-        1) elegir producto a eliminar y cantidad a eliminar
-    3) eliminar todo: elimina todo el carrito
-    4) retroceder
-3. pagar compra 
-    1) irte sin pagar
-    2) pagar en efectivo
-    3) pagar con tarjeta
-    4) pagar con qr
-    5) pagar con tarjeta y efectivo
-    6) otros metodos
-4. irte sin comprar nada 
-"""
+    2. menu carrito
+        1) ver todo el carrito
+        se muestra cada producto con su cantidad y precio unitario y precio total
+            1) retroceder
+        2) eliminar articulo
+            se muestra cada producto con su cantidad 
+            1) elegir producto a eliminar y cantidad a eliminar
+        3) eliminar todo: elimina todo el carrito
+        4) retroceder
+    3. pagar compra 
+        1) irte con todos los productos sin pagar
+        2) pagar en efectivo
+        3) pagar con tarjeta
+        4) pagar con qr
+        5) pagar con tarjeta y efectivo
+    4. irte sin comprar nada 
+    """
+
+class PaymentMethod(ABC):
+    @abstractmethod
+    def process_payment(self, amount):
+        pass
+
+class CashPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount
+
+class CardPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount * 0.7
+
+class QRPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount * 0.9
+ 
+class ShippingMethod(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        pass
+
+class StandardShipping(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 5 + weight * 0.5 + distance_from_store * 0.1
+
+class ExpressShipping(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 10 + weight * 1.0 + distance_from_store * 0.2
+
+class InStorePickup(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 0
+
+def calculate_shipping(shipping_method, weight, distance_from_store):
+    return shipping_method.calculate_shipping_cost(weight, distance_from_store)
