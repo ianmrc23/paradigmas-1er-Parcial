@@ -1,5 +1,44 @@
 from abc import ABC, abstractmethod
 import os
+class PaymentMethod(ABC):
+    @abstractmethod
+    def process_payment(self, amount):
+        pass
+
+class CashPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount
+
+class CardPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount * 0.7
+
+class QRPayment(PaymentMethod):
+    def process_payment(self, amount):
+        return amount * 0.9
+ 
+def process_payment(payment_method, total_amount):
+    return payment_method.process_payment(total_amount)
+
+class ShippingMethod(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        pass
+
+class StandardShipping(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 5 + weight * 0.5 + distance_from_store * 0.1
+
+class ExpressShipping(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 10 + weight * 1.0 + distance_from_store * 0.2
+
+class InStorePickup(ShippingMethod):
+    def calculate_shipping_cost(self, weight, distance_from_store):
+        return 0
+
+def calculate_shipping(shipping_method, weight, distance_from_store):
+    return shipping_method.calculate_shipping_cost(weight, distance_from_store)
 
 class Node:
     def __init__(self, data):
@@ -529,7 +568,8 @@ def checkout_menu(client, client_cart):
     total_amount, total_weight = client_cart.calculate_totals()
     destination = client.client_distance_from_store
     
-    print(f"\n* Total product cost: {total_amount}")
+    client_cart.view_cart()
+    
     while True:
         print("Checkout Menu:")
         print("1. Pay with Cash")
@@ -551,10 +591,9 @@ def checkout_menu(client, client_cart):
         else:
             print("Invalid payment method. Please enter a valid option.")
 
-    product_cost = payment_method.process_payment(total_amount)
-    total_with_discount = total_amount - product_cost
+    total_with_discount = process_payment(payment_method, total_amount)
 
-    print(f"\n* Total amount with discount: {total_with_discount}")
+    print(f"\n* Total amount with discount: {total_with_discount:.2f}")
         
     while True:
         print("Shipping Methods:")
@@ -579,10 +618,12 @@ def checkout_menu(client, client_cart):
             print("Invalid shipping method. Please enter a valid option.")
 
     shipping_cost = calculate_shipping(shipping_method, total_weight, destination)
-    print(f"\n* Shipping cost: {shipping_cost}")
+    print(f"\n* Shipping cost: {shipping_cost:.2f}")
 
     total_amount_with_shipping = total_with_discount + shipping_cost
-    print(f"\n* Total amount with discount and shipping: {total_amount_with_shipping}")
+    print(f"\n* Total amount with discount and shipping: {total_amount_with_shipping:.2f}")
+    
+    farewell_message()
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -590,6 +631,10 @@ def clear_screen():
 def wait_for_key():
     input("\n* Press Enter to continue...")
     
+def farewell_message():
+    print("\n* Thank you for visiting us! We hope to see you again soon!")
+    exit()
+
 if __name__ == "__main__":
     #employee_main()
     client_main()
@@ -619,40 +664,3 @@ if __name__ == "__main__":
         5) pagar con tarjeta y efectivo
     4. irte sin comprar nada 
     """
-
-class PaymentMethod(ABC):
-    @abstractmethod
-    def process_payment(self, amount):
-        pass
-
-class CashPayment(PaymentMethod):
-    def process_payment(self, amount):
-        return amount
-
-class CardPayment(PaymentMethod):
-    def process_payment(self, amount):
-        return amount * 0.7
-
-class QRPayment(PaymentMethod):
-    def process_payment(self, amount):
-        return amount * 0.9
- 
-class ShippingMethod(ABC):
-    @abstractmethod
-    def calculate_shipping_cost(self, weight, distance_from_store):
-        pass
-
-class StandardShipping(ShippingMethod):
-    def calculate_shipping_cost(self, weight, distance_from_store):
-        return 5 + weight * 0.5 + distance_from_store * 0.1
-
-class ExpressShipping(ShippingMethod):
-    def calculate_shipping_cost(self, weight, distance_from_store):
-        return 10 + weight * 1.0 + distance_from_store * 0.2
-
-class InStorePickup(ShippingMethod):
-    def calculate_shipping_cost(self, weight, distance_from_store):
-        return 0
-
-def calculate_shipping(shipping_method, weight, distance_from_store):
-    return shipping_method.calculate_shipping_cost(weight, distance_from_store)
