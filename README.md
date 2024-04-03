@@ -10,18 +10,26 @@ A continuación, te proporcionamos instrucciones detalladas sobre cómo llevar a
 2. Descarga el archivo de código fuente de Comercial Virgen del Rosario desde nuestro repositorio en GitHub: [Comercial Virgen del Rosario GitHub Repository](https://github.com/ianmrc23/paradigmas-1er-Parcial.git).
 3. Abre una terminal o línea de comandos y navega hasta la ubicación donde has descargado el archivo de código fuente.
 
-## Instalación de Dependencias
+## Manual de Uso del Programa
 
-1. Ejecuta el siguiente comando para instalar las dependencias necesarias:
+1. Interfaz de Usuario Intuitiva:
+    - El programa está diseñado con una interfaz de usuario intuitiva y fácil de usar.
+    - Se utilizan opciones numéricas en todos los menús para facilitar la navegación.
 
-## Pruebas Manuales
+2. Selección de Opciones:
+    - Para seleccionar una opción, simplemente ingrese el número correspondiente a esa opción y presione Enter.
+    - Si ingresa un valor incorrecto o inesperado, el programa le brindará la oportunidad de corregirlo y seleccionar una opción válida.
 
-1. Después de ejecutar las pruebas automatizadas, puedes realizar pruebas manuales para explorar más a fondo la aplicación.
+3. Menús Disponibles:
+    - Menú Principal:
+        Este menú le permite acceder a diferentes partes del programa, como ver categorías, administrar el carrito de compras y realizar el pago.
+    - Menú de Categorías:
+        Aquí puede explorar las diferentes categorías de productos disponibles para la compra.
+    - Menú del Carrito de Compras:
+        Permite ver los productos agregados al carrito, eliminar productos individuales o vaciar completamente el carrito.
+    - Menú de Pago:
+        Ofrece opciones para pagar su compra, incluido el pago en efectivo, con tarjeta o a través de un código QR.
 
-2. Abre la aplicación en tu navegador web e interactúa con las diferentes características, como la navegación por las categorías, la agregación de productos al carrito y el proceso de pago.
-
-3. Asegúrate de probar diferentes escenarios, como agregar productos al carrito, eliminar productos, y completar el proceso de pago con diferentes métodos de pago.
-
-¡Felicidades! Has completado con éxito las pruebas del código de Comercial Virgen del Rosario. Si encuentras algún problema o tienes alguna pregunta, no dudes en comunicarte con nuestro equipo de desarrollo.
-
-Gracias por tu tiempo y tu contribución al desarrollo de Comercial Virgen del Rosario.
+4. Validación de Entradas:
+    - Todas las entradas proporcionadas por el usuario son validadas para garantizar la integridad de los datos.
+    - Si comete un error al ingresar una opción, el programa le solicitará que ingrese nuevamente una opción válida.

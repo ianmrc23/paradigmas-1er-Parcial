@@ -1,0 +1,29 @@
+Simulación de una Página Web de Compras para:
+"Comercial Virgen del Rosario" de Luque
+
+Contexto de la Elección del Proyecto:
+El "Comercial Virgen del Rosario" se destaca como el supermercado más prominente de la ciudad de
+Luque, no sólo en términos de tamaño físico, sino también por su reputación bien ganada entre los
+habitantes locales. Es conocido por ofrecer excelentes precios tanto para mayoristas como para
+minoristas, así como por su calidad y variedad de productos. A pesar de su importancia en la
+comunidad, resulta sorprendente que carezca de una presencia online, ya que aún no cuenta con un 
+sitio web propio. Por tanto, este proyecto se inspira en la necesidad de crear una simulación de las 
+funciones básicas que debería ofrecer cualquier sitio web de compras en línea.
+
+Relato Simplificado del Programa:
+Para simular la gestión de productos y transacciones, opté por utilizar un archivo de texto como una 
+representación de la base de datos. Todos los productos se almacenan como objetos de una clase 
+homónima. Para gestionar eficientemente estos datos y hacerlos accesibles al usuario, implementé el 
+método de listas enlazadas. Esta estructura, análoga al backend de la página, permite al cliente 
+agregar productos y especificar la cantidad deseada en su carrito de compras, que también está 
+representado como una lista enlazada.
+El programa facilita al cliente la selección de productos y su cantidad, los cuales son almacenados en 
+el carrito de compras. Posteriormente, el cliente procede a realizar el pago, momento en el que se 
+introduce el concepto de polimorfismo. Se ofrecen tres opciones de pago diferentes, cada una con su 
+respectivo descuento aplicable. Este enfoque flexible permite una fácil adaptación a posibles 
+necesidades futuras.
+Una vez calculado el monto final a pagar por el cliente, se presenta la opción de elegir el método de 
+entrega. Nuevamente, se emplea el polimorfismo para adaptar el cálculo del costo de envío a diferentes 
+criterios, como el peso del producto o la distancia entre la tienda y el cliente.
+Finalmente, después de seleccionar los productos, el método de pago y el tipo de envío deseado, el 
+programa concluye su ejecución.

@@ -713,7 +713,7 @@ if __name__ == "__main__":
 
 
 """ 
-Errores a corregir:
-1. al eliminar un producto del carrito hay que actualizar de nuevo el stock
-2. cambiar el stilo a checkout, no se imprime como tabla
+Para corregir:
+1. al eliminar un producto del carrito hay que aumentar de nuevo el stock
+2. si se agrega un producto que ya existe en el carrito, no crear un nuevo nodo sino aumentar la cantidad del mismo
 """
