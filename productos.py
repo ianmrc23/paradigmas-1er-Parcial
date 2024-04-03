@@ -716,4 +716,5 @@ if __name__ == "__main__":
 Para corregir:
 1. al eliminar un producto del carrito hay que aumentar de nuevo el stock
 2. si se agrega un producto que ya existe en el carrito, no crear un nuevo nodo sino aumentar la cantidad del mismo
+3. si el carrito esta vacio a la hora de hacer el checkout mostrar mensaje
 """

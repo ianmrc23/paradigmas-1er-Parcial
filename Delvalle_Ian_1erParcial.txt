@@ -10,20 +10,35 @@ comunidad, resulta sorprendente que carezca de una presencia online, ya que aún
 sitio web propio. Por tanto, este proyecto se inspira en la necesidad de crear una simulación de las 
 funciones básicas que debería ofrecer cualquier sitio web de compras en línea.
 
-Relato Simplificado del Programa:
-Para simular la gestión de productos y transacciones, opté por utilizar un archivo de texto como una 
-representación de la base de datos. Todos los productos se almacenan como objetos de una clase 
-homónima. Para gestionar eficientemente estos datos y hacerlos accesibles al usuario, implementé el 
-método de listas enlazadas. Esta estructura, análoga al backend de la página, permite al cliente 
-agregar productos y especificar la cantidad deseada en su carrito de compras, que también está 
-representado como una lista enlazada.
-El programa facilita al cliente la selección de productos y su cantidad, los cuales son almacenados en 
-el carrito de compras. Posteriormente, el cliente procede a realizar el pago, momento en el que se 
-introduce el concepto de polimorfismo. Se ofrecen tres opciones de pago diferentes, cada una con su 
-respectivo descuento aplicable. Este enfoque flexible permite una fácil adaptación a posibles 
-necesidades futuras.
-Una vez calculado el monto final a pagar por el cliente, se presenta la opción de elegir el método de 
-entrega. Nuevamente, se emplea el polimorfismo para adaptar el cálculo del costo de envío a diferentes 
-criterios, como el peso del producto o la distancia entre la tienda y el cliente.
-Finalmente, después de seleccionar los productos, el método de pago y el tipo de envío deseado, el 
-programa concluye su ejecución.
+Relato Simplificado del Proceso de Pago y Envío en la Tienda Virtual
+
+Al llegar al proceso de pago y envío en la tienda virtual, el cliente se encuentra frente a diversas 
+opciones que reflejan la flexibilidad y la adaptabilidad del sistema.
+
+Primero, al visualizar el menú de pago, se presenta al cliente con tres alternativas distintas, cada 
+una representando un método de pago diferente. Aquí es donde entra en juego el concepto de 
+polimorfismo, ya que aunque los métodos de pago difieren en sus detalles, todos implementan una 
+función común, process_payment(amount). El cliente puede elegir entre pagar en efectivo, con tarjeta 
+(con un descuento del 30%) o mediante código QR (con un descuento del 10%).
+
+Una vez seleccionado el método de pago, el sistema calcula el monto total a pagar, aplicando el 
+descuento correspondiente según el método elegido. Este proceso refleja el principio de polimorfismo, 
+ya que el sistema puede manejar diferentes tipos de objetos de pago de manera uniforme a través de una 
+interfaz común.
+
+Posteriormente, se presenta al cliente con las opciones de envío, donde nuevamente se aplica el 
+polimorfismo. Se ofrecen tres métodos de envío: envío estándar, envío exprés y recogida en tienda. 
+Cada uno de estos métodos implementa la función calculate_shipping_cost(weight, distance_from_store) 
+de manera diferente, permitiendo al sistema calcular los costos de envío de acuerdo con las 
+características específicas de cada método. Por ejemplo, el envío estándar podría calcularse en 
+función del peso del paquete y la distancia desde la tienda, mientras que el envío exprés podría 
+agregar una tarifa adicional por la rapidez del servicio.
+
+Una vez que se ha seleccionado el método de envío, el sistema muestra al cliente el monto total con 
+descuento, junto con el costo de envío calculado. Este proceso demuestra cómo el polimorfismo permite 
+que el sistema maneje diferentes tipos de envío de manera uniforme, aplicando las reglas específicas 
+de cada método para calcular los costos de envío de manera eficiente.
+
+Finalmente, el cliente puede revisar el monto total a pagar, que incluye el descuento y los costos de 
+envío, antes de finalizar su compra. Este enfoque flexible y modular, impulsado por el polimorfismo, 
+garantiza una experiencia de compra personalizada y adaptable para cada cliente.
